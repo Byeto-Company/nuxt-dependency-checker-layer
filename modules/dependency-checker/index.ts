@@ -57,7 +57,6 @@ export default defineNuxtModule<ModuleOptions>({
 
                 for (const dependency of Object.keys(parsedPackageJsonContent.dependencies)) {
                     if (!packagesList.find((pkg) => pkg.name === dependency)) {
-                        console.log(layer);
                         packagesList.push({
                             scope: "Layer",
                             name: dependency,
@@ -77,13 +76,13 @@ export default defineNuxtModule<ModuleOptions>({
         }[] = [];
 
         for (const dependency of packagesList) {
-            const projectDependency = currentProjectPackagesList.find((pkg) => pkg.name === dependency.name);
-            if (!projectDependency) {
+            // const projectDependency = currentProjectPackagesList.find((pkg) => pkg.name === dependency.name);
+            // if (!projectDependency) {
                 packagesToInstall.push({
                     canInstall: true,
                     package: dependency,
                 });
-            }
+            // }
             // if (projectDependency) {
             // const projectVersion = semver.minVersion(projectDependency.version);
             // const layerVersion = semver.minVersion(dependency.version);
