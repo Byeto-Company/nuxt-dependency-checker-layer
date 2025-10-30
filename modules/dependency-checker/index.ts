@@ -105,7 +105,7 @@ export default defineNuxtModule<ModuleOptions>({
             return new Promise((resolve, reject) => {
                 const packagesListString = packagesToInstall
                     .filter((item) => item.canInstall)
-                    .map((item) => `${item.package.name}@${item.package.version}`);
+                    .map((item) => `${item.package.name}@${item.package.version.replace("^", "")}`);
 
                 console.log(packagesListString)
 
