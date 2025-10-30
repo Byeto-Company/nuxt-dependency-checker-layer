@@ -107,8 +107,6 @@ export default defineNuxtModule<ModuleOptions>({
                     .filter((item) => item.canInstall)
                     .map((item) => `${item.package.name}@${item.package.version.replace("^", "")}`);
 
-                console.log(packagesListString)
-
                 const spawnProcess = spawn(`bun`, ["add", ...packagesListString, "--ignore-scripts"], {
                     stdio: "inherit",
                     shell: false,
