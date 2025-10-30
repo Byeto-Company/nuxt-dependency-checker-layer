@@ -99,11 +99,6 @@ export default defineNuxtModule<ModuleOptions>({
                     package: dependency,
                 });
             }
-
-            packagesToInstall.push({
-                canInstall: true,
-                package: dependency,
-            });
         }
 
         const installPackages = () => {
