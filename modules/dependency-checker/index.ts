@@ -105,7 +105,7 @@ export default defineNuxtModule<ModuleOptions>({
             return new Promise((resolve, reject) => {
                 const packagesListString = packagesToInstall
                     .filter((item) => item.canInstall)
-                    .map((item) => item.package.name);
+                    .map((item) => `${item.package.name}@${item.package.version}`);
 
                 const spawnProcess = spawn(`bun`, ["add", ...packagesListString, "--ignore-scripts"], {
                     stdio: "inherit",
