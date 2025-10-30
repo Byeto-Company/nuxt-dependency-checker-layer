@@ -2,6 +2,7 @@ import { createResolver, defineNuxtModule, useLogger } from "@nuxt/kit";
 import path from "path";
 import fs from "fs/promises";
 import { spawn } from "child_process";
+import semver from "semver";
 
 // import { defu } from "defu";
 // import { addCustomTab } from "@nuxt/devtools-kit";
@@ -76,51 +77,33 @@ export default defineNuxtModule<ModuleOptions>({
         }[] = [];
 
         for (const dependency of packagesList) {
-            // const projectDependency = currentProjectPackagesList.find((pkg) => pkg.name === dependency.name);
-            // if (!projectDependency) {
+            const projectDependency = currentProjectPackagesList.find((pkg) => pkg.name === dependency.name);
+
+            if (projectDependency) {
+                const projectVersion = semver.minVersion(projectDependency.version);
+                const layerVersion = semver.minVersion(dependency.version);
+
+                if (
+                    layerVersion!.major > projectVersion!.major ||
+                    layerVersion!.minor > projectVersion!.minor ||
+                    layerVersion!.patch > projectVersion!.patch
+                ) {
+                    packagesToInstall.push({
+                        canInstall: true,
+                        package: dependency,
+                    });
+                }
+            } else {
                 packagesToInstall.push({
                     canInstall: true,
                     package: dependency,
                 });
-            // }
-            // if (projectDependency) {
-            // const projectVersion = semver.minVersion(projectDependency.version);
-            // const layerVersion = semver.minVersion(dependency.version);
+            }
 
-            // if (projectVersion!.major !== layerVersion!.major) {
-            //     packagesToInstall.push({
-            //         canInstall: false,
-            //         status: "MAJOR",
-            //         package: dependency,
-            //     });
-            // } else if (projectVersion!.minor !== layerVersion!.minor) {
-            //     packagesToInstall.push({
-            //         canInstall: true,
-            //         status: "MINOR",
-            //         package: dependency,
-            //     });
-            // } else if (projectVersion!.patch !== layerVersion!.patch) {
-            //     packagesToInstall.push({
-            //         canInstall: true,
-            //         status: "PATH",
-            //         package: dependency,
-            //     });
-            // }
-            // } else {
-
-            // }
-
-            // packagesToInstall.push({
-            //     canInstall: true,
-            //     package: dependency,
-            // });
-
-            // if (currentProjectPackagesList.includes(dependency)) {
-            //     // console.log(`${dependency} is installed.`);
-            // } else {
-            //     packagesToInstall.push(dependency);
-            //     // console.log(`${dependency} should install!`);
-            // }
+            packagesToInstall.push({
+                canInstall: true,
+                package: dependency,
+            });
         }
 
         const installPackages = () => {
